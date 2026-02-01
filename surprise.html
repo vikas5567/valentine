@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Surprise For You</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffdde1; /* Soft Pink */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Keeps the button from creating scrollbars */
+        }
+
+        /* General Container Styling */
+        .screen {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Hidden class to toggle screens */
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        h1 {
+            color: #d32f2f;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .gif-container img {
+            width: 200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Buttons Styling */
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Intro Button */
+        #startBtn {
+            background-color: #ff6f61;
+            color: white;
+        }
+        #startBtn:hover {
+            transform: scale(1.1);
+            background-color: #ff3b2f;
+        }
+
+        /* Yes Button */
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+            margin: 10px;
+            z-index: 10; /* Ensures Yes is always on top */
+            position: relative;
+        }
+        #yesBtn:hover {
+            transform: scale(1.1);
+        }
+
+        /* No Button - The Tricky One */
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute; /* Allows it to fly anywhere */
+            margin: 10px;
+            transition: top 0.3s ease, left 0.3s ease; /* Smooth gliding movement */
+        }
+
+        /* Envelope Icon for Intro */
+        .envelope {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="screen-intro" class="screen">
+        <div class="envelope">💌</div>
+        <h1>Ready for a cute surprise?</h1>
+        <p>Something special is waiting for you... 💝</p>
+        <button id="startBtn">Open Surprise</button>
+    </div>
+
+    <div id="screen-question" class="screen hidden">
+        <div class="gif-container">
+            <img src="https://clipart-library.com/2023/cartoon-question-mark.gif" alt="Cute Bear">
+        </div>
+        <h1>Will you be my Valentine? 🌹</h1>
+        
+        <button id="yesBtn">Yes! ❤️</button>
+        <button id="noBtn">No 💔</button>
+    </div>
+
+    <div id="screen-success" class="screen hidden">
+        <div class="gif-container">
+            <img src="https://bestgrafix.com/wp-content/uploads/2025/08/Cute-Heart-Gif.gif" alt="Bear Kiss">
+        </div>
+        <h1>Yay! I knew you'd say yes ❤️</h1>
+        <p>You've made me the happiest person in the world!</p>
+    </div>
+
+    <script>
+        // Get Elements
+        const screenIntro = document.getElementById('screen-intro');
+        const screenQuestion = document.getElementById('screen-question');
+        const screenSuccess = document.getElementById('screen-success');
+        
+        const startBtn = document.getElementById('startBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+
+        // 1. Move from Intro to Question
+        startBtn.addEventListener('click', () => {
+            screenIntro.classList.add('hidden');
+            screenQuestion.classList.remove('hidden');
+            
+            // Center the No button initially next to Yes
+            // We do a small timeout to let the display:block render first
+            setTimeout(() => {
+                const yesRect = yesBtn.getBoundingClientRect();
+                noBtn.style.left = (yesRect.right + 20) + 'px';
+                noBtn.style.top = yesRect.top + 'px';
+            }, 50);
+        });
+
+        // 2. The "No" Button Logic (The Gliding Effect)
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton); // For mobile
+
+        function moveButton() {
+            // Get screen size
+            const maxWidth = window.innerWidth - noBtn.offsetWidth;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight;
+
+            // Generate random coordinates
+            const randomX = Math.random() * maxWidth;
+            const randomY = Math.random() * maxHeight;
+
+            // Apply new position
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // 3. Move from Question to Success
+        yesBtn.addEventListener('click', () => {
+            screenQuestion.classList.add('hidden');
+            screenSuccess.classList.remove('hidden');
+            
+            // Hide the No button purely so it doesn't float over the success screen
+            noBtn.style.display = 'none';
+        });
+
+    </script>
+</body>
+</html>
