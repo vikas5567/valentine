@@ -91,9 +91,10 @@
         #noBtn {
             background-color: #f44336;
             color: white;
-            position: absolute; /* Allows it to fly anywhere */
+            position: fixed; /* Changed from absolute to fixed */
             margin: 10px;
             transition: top 0.3s ease, left 0.3s ease; /* Smooth gliding movement */
+            z-index: 100; /* High z-index to stay on top */
         }
 
         /* Envelope Icon for Intro */
