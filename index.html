@@ -228,12 +228,21 @@
             screenIntro.classList.add('hidden');
             screenQuestion.classList.remove('hidden');
             
-            // Center the No button initially next to Yes
+            // Center the No button initially next to Yes (or below on mobile)
             // We do a small timeout to let the display:block render first
             setTimeout(() => {
                 const yesRect = yesBtn.getBoundingClientRect();
-                noBtn.style.left = (yesRect.right + 20) + 'px';
-                noBtn.style.top = yesRect.top + 'px';
+                const isMobile = window.innerWidth <= 768;
+                
+                if (isMobile) {
+                    // On mobile, place it below the Yes button
+                    noBtn.style.left = (window.innerWidth / 2 - noBtn.offsetWidth / 2) + 'px';
+                    noBtn.style.top = (yesRect.bottom + 15) + 'px';
+                } else {
+                    // On desktop, place it to the right of Yes button
+                    noBtn.style.left = (yesRect.right + 20) + 'px';
+                    noBtn.style.top = yesRect.top + 'px';
+                }
             }, 50);
         });
 
@@ -243,12 +252,12 @@
 
         function moveButton() {
             // Get screen size
-            const maxWidth = window.innerWidth - noBtn.offsetWidth;
-            const maxHeight = window.innerHeight - noBtn.offsetHeight;
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - 10;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - 10;
 
-            // Generate random coordinates
-            const randomX = Math.random() * maxWidth;
-            const randomY = Math.random() * maxHeight;
+            // Ensure values are positive
+            const randomX = Math.max(0, Math.random() * maxWidth);
+            const randomY = Math.max(0, Math.random() * maxHeight);
 
             // Apply new position
             noBtn.style.left = randomX + 'px';
